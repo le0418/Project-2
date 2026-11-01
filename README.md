@@ -1,4 +1,4 @@
-# Tech Challenge 2 — AWS EKS, Terraform, Helm & Jenkins CI/CD
+# AWS EKS, Terraform, Helm & Jenkins CI/CD
 
 ## Project Overview
 
@@ -8,7 +8,6 @@ The solution includes an AWS Application Load Balancer (ALB), Amazon Elastic Con
 
 ## Architecture
 
-```text
 GitHub Repository
        |
        v
@@ -30,7 +29,6 @@ Jenkins CI/CD Pipeline
           AWS Application Load Balancer
                     |
                  HTTP Client
-```
 
 ### AWS Infrastructure
 
@@ -65,7 +63,6 @@ The EKS worker nodes are deployed into private subnets.
 
 ## Repository Structure
 
-```text
 tech-challenge-2/
 ├── .dockerignore
 ├── .gitignore
@@ -104,23 +101,12 @@ tech-challenge-2/
 
 From the Terraform directory:
 
-```powershell
 cd terraform
 terraform init
 terraform fmt -check -diff
 terraform validate
 terraform plan
-```
-
-Review the Terraform plan carefully before any infrastructure changes.
-
-To provision infrastructure in an appropriate environment:
-
-```powershell
 terraform apply
-```
-
-**Important:** This project has known configuration drift involving the EKS API endpoint CIDR allowlist and an AWS Load Balancer Controller-managed security group rule. Do not apply the configuration to the existing deployed environment without first reconciling those differences.
 
 ## Application Containerization
 
@@ -128,10 +114,7 @@ The Flask application is packaged using the repository's `Dockerfile`.
 
 Build the image locally:
 
-```powershell
 docker build -t tech-challenge-2:local .
-```
-
 The Jenkins pipeline builds the application image and publishes it to Amazon ECR.
 
 ## Kubernetes Deployment with Helm
@@ -140,15 +123,11 @@ The Helm chart is stored in `flask-chart/`.
 
 Inspect the chart:
 
-```powershell
 helm lint ./flask-chart
-```
 
 Deploy or update the application:
 
-```powershell
 helm upgrade --install flask-app ./flask-chart --namespace default
-```
 
 The Jenkins pipeline performs the production deployment workflow using the container image published to ECR.
 
@@ -169,13 +148,11 @@ The pipeline performs these stages:
 
 Jenkins job: `tech-challenge-2-cicd`
 
-Successful build: `#2`
+Successful build: #2
 
 Published image:
 
-```text
 900160666800.dkr.ecr.us-east-1.amazonaws.com/tech-challenge-2:build-2
-```
 
 The ECR image was verified after the pipeline completed.
 
@@ -197,8 +174,6 @@ Configured HPA values:
 | Memory limit | 256Mi |
 
 The HPA was observed with active CPU and memory metrics and two running replicas following the Jenkins deployment.
-
-**Validation scope:** HPA configuration and metrics availability were verified. Scaling behavior under sustained load was not tested.
 
 
 ## Cluster Autoscaler and Pod Scheduling
@@ -265,9 +240,7 @@ The following checks were completed successfully:
 
 ### Health Endpoint
 
-```text
 http://k8s-default-flaskapp-984b2761fd-1453430924.us-east-1.elb.amazonaws.com/health
-```
 
 The endpoint returned HTTP 200 with a JSON response containing `status: healthy` during verification.
 
@@ -293,7 +266,7 @@ These differences should be reconciled before a future `terraform apply`. No inf
 
 ## Limitations and Production Improvements
 
-This deployment is intended as a technical challenge demonstration.
+This deployment is intended as a technical demonstration.
 
 Potential production improvements include:
 
@@ -330,7 +303,7 @@ This separates the image-building process from Kubernetes deployment reconciliat
 
 The workflow is defined in:
 
-`.github/workflows/gitops-build.yml`
+.github/workflows/gitops-build.yml
 
 Key features include:
 
@@ -343,7 +316,7 @@ Key features include:
 
 The GitHub Actions IAM role is:
 
-`TechChallenge2GitHubActionsECRRole`
+TechChallenge2GitHubActionsECRRole
 
 ### Argo CD Configuration
 
@@ -353,7 +326,7 @@ The application manifest is located at:
 
 `gitops/argocd/flask-gitops-application.yaml`
 
-The application uses the private GitHub repository as its desired-state source.
+The application uses the public GitHub repository as its desired-state source.
 
 Repository authentication uses a read-only GitHub SSH deploy key stored as a Kubernetes Secret in the Argo CD namespace. Private key material is not committed to Git.
 
@@ -374,7 +347,7 @@ The GitOps deployment does not create an additional public Application Load Bala
 
 A successful GitHub Actions run associated with commit `11001ef` built and pushed the following image to Amazon ECR:
 
-`900160666800.dkr.ecr.us-east-1.amazonaws.com/tech-challenge-2:gitops-11001ef67877bc5356cff5a558affb053794c733`
+900160666800.dkr.ecr.us-east-1.amazonaws.com/tech-challenge-2:gitops-11001ef67877bc5356cff5a558affb053794c733
 
 The workflow successfully updated the GitOps image tag in GitHub.
 
