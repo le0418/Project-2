@@ -13,11 +13,11 @@ GitHub Repository
        v
 Jenkins CI/CD Pipeline
        |
-       +--> Docker Build
+       Docker Build
        |
-       +--> Amazon ECR
+       Amazon ECR
        |
-       +--> Helm Upgrade / Install
+       Helm Upgrade / Install
                     |
                     v
                Amazon EKS
