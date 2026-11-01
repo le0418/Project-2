@@ -10,8 +10,7 @@ The solution includes an AWS Application Load Balancer (ALB), Amazon Elastic Con
 
 GitHub Repository
        |
-       v
-Jenkins CI/CD Pipeline
+       Jenkins CI/CD Pipeline
        |
        Docker Build
        |
@@ -19,7 +18,6 @@ Jenkins CI/CD Pipeline
        |
        Helm Upgrade / Install
                     |
-                    v
                Amazon EKS
                     |
              Flask Application
